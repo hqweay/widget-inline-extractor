@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      #menu {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+      }
+      #toggleButton {
+        width: 90px;
+        height: 30px;
+      }
+
+      #myDropdown {
+        width: 60px;
+        height: 30px;
+      }
+      #contentList {
+        padding-top: 30px;
+      }
+      #contentList li {
+        padding: 5px;
+        background-color: #f2f2f2;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        color: black;
+      }
+      #contentList li a {
+        color: black;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="menu">
+      <button id="toggleButton">包含嵌入块</button>
+      <select id="myDropdown">
+        <option value="mark">mark</option>
+        <option value="strong">strong</option>
+        <option value="code">code</option>
+        <option value="code">tag</option>
+        <option value="code">inline-math</option>
+        <option value="code">inline-memo</option>
+        <option value="code">em</option>
+        <option value="code">u</option>
+      </select>
+    </div>
+
+    <ul id="contentList"></ul>
+
+    <script>
+      var getFromEmbedFlag = false;
+      var selectedValue = "mark";
+
+      var toggleButton = document.getElementById("toggleButton");
+      var dropdown = document.getElementById("myDropdown");
+
+      toggleButton.addEventListener("click", function () {
+        getFromEmbedFlag = !getFromEmbedFlag; // 切换变量的值
+        document.getElementById("toggleButton").textContent = getFromEmbedFlag
+          ? "包含嵌入块"
+          : "不包含嵌入块";
+        init();
+      });
+
+      dropdown.addEventListener("change", function () {
+        selectedValue = dropdown.value;
+        init();
+      });
+      init();
+      function init() {
+        let contentListElement = document.getElementById("contentList");
+        contentListElement.innerHTML = "";
+        let elements;
+        //获取嵌入块的内容
+        if (getFromEmbedFlag) {
+          elements = window.parent.document
+            .querySelector("[class='fn__flex-1 protyle']")
+            .querySelectorAll(`[data-type=${selectedValue}]`);
+        } else {
+          elements = window.parent.document
+            .querySelector("[class='fn__flex-1 protyle']")
+            .querySelectorAll(
+              `[data-type=${selectedValue}]:not(.protyle-wysiwyg__embed *)`
+            );
+        }
+
+        console.log(
+          window.parent.document.querySelector(".fn__flex-1.protyle")
+        );
+        for (var i = 0; i < elements.length; i++) {
+          var content = elements[i].textContent;
+
+          var link = window.parent.document.createElement("a");
+          link.textContent = content;
+
+          var firstDataParent = elements[i].closest("[data-node-id]");
+          if (!firstDataParent) {
+            continue;
+          }
+          link.href = `siyuan://blocks/${firstDataParent.getAttribute(
+            "data-node-id"
+          )}`;
+
+          var listItem = window.parent.document.createElement("li");
+          listItem.appendChild(link);
+
+          contentListElement.appendChild(listItem);
+        }
+      }
+    </script>
+  </body>
+</html>
