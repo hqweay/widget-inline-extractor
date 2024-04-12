@@ -39,11 +39,11 @@
         <option value="mark">mark</option>
         <option value="strong">strong</option>
         <option value="code">code</option>
-        <option value="code">tag</option>
-        <option value="code">inline-math</option>
-        <option value="code">inline-memo</option>
-        <option value="code">em</option>
-        <option value="code">u</option>
+        <option value="tag">tag</option>
+        <option value="inline-math">inline-math</option>
+        <option value="inline-memo">inline-memo</option>
+        <option value="em">em</option>
+        <option value="u">u</option>
       </select>
     </div>
 
@@ -77,25 +77,23 @@
         if (getFromEmbedFlag) {
           elements = window.parent.document
             .querySelector("[class='fn__flex-1 protyle']")
-            .querySelectorAll(`[data-type=${selectedValue}]`);
+            .querySelectorAll(`span[data-type~=${selectedValue}]`);
         } else {
           elements = window.parent.document
             .querySelector("[class='fn__flex-1 protyle']")
             .querySelectorAll(
-              `[data-type=${selectedValue}]:not(.protyle-wysiwyg__embed *)`
+              `span[data-type~=${selectedValue}]:not(.protyle-wysiwyg__embed *)`
             );
         }
 
-        console.log(
-          window.parent.document.querySelector(".fn__flex-1.protyle")
-        );
-        for (var i = 0; i < elements.length; i++) {
-          var content = elements[i].textContent;
+        console.log(elements);
+        for (let i = 0; i < elements.length; i++) {
+          let content = elements[i].textContent;
 
-          var link = window.parent.document.createElement("a");
+          let link = window.parent.document.createElement("a");
           link.textContent = content;
 
-          var firstDataParent = elements[i].closest("[data-node-id]");
+          let firstDataParent = elements[i].closest("[data-node-id]");
           if (!firstDataParent) {
             continue;
           }
@@ -103,7 +101,7 @@
             "data-node-id"
           )}`;
 
-          var listItem = window.parent.document.createElement("li");
+          let listItem = window.parent.document.createElement("li");
           listItem.appendChild(link);
 
           contentListElement.appendChild(listItem);
