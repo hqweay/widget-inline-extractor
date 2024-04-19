@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <style>
-      #menu {
+      #widget-inline-extractor {
         position: fixed;
         top: 10px;
         left: 10px;
@@ -32,8 +32,8 @@
       }
     </style>
   </head>
-  <body>
-    <div id="menu">
+  <body id="seqID">
+    <div id="widget-inline-extractor">
       <button id="toggleButton">包含嵌入块</button>
       <select id="myDropdown">
         <option value="mark">mark</option>
@@ -50,6 +50,10 @@
     <ul id="contentList"></ul>
 
     <script>
+      // 为 iframe 设置随机id，防止多窗口窜数据
+      const randomId = "id_" + Math.random().toString(36).substr(2, 9);
+      document.body.id = randomId;
+
       var getFromEmbedFlag = false;
       var selectedValue = "mark";
 
@@ -73,20 +77,40 @@
         let contentListElement = document.getElementById("contentList");
         contentListElement.innerHTML = "";
         let elements;
-        //获取嵌入块的内容
-        if (getFromEmbedFlag) {
-          elements = window.parent.document
-            .querySelector("[class='fn__flex-1 protyle']")
-            .querySelectorAll(`span[data-type~=${selectedValue}]`);
-        } else {
-          elements = window.parent.document
-            .querySelector("[class='fn__flex-1 protyle']")
-            .querySelectorAll(
-              `span[data-type~=${selectedValue}]:not(.protyle-wysiwyg__embed *)`
+
+        let pageDoms = window.parent.document.querySelectorAll(
+          "[class='fn__flex-1 protyle']"
+        );
+
+        if (pageDoms.length > 1) {
+          pageDoms = Array.from(pageDoms).filter(function (ele) {
+            return (
+              ele.querySelector(
+                "[data-src='/widgets/widget-inline-extractor/']"
+              ) &&
+              ele
+                .querySelector("[data-src='/widgets/widget-inline-extractor/']")
+                .contentWindow.document.querySelector(`[id='${randomId}']`)
             );
+          });
         }
 
-        console.log(elements);
+        if (pageDoms.length !== 1) {
+          console.log("can not found");
+          return;
+        }
+
+        //获取嵌入块的内容
+        if (getFromEmbedFlag) {
+          elements = pageDoms[0].querySelectorAll(
+            `span[data-type~=${selectedValue}]`
+          );
+        } else {
+          elements = pageDoms[0].querySelectorAll(
+            `span[data-type~=${selectedValue}]:not(.protyle-wysiwyg__embed *)`
+          );
+        }
+
         for (let i = 0; i < elements.length; i++) {
           let content = elements[i].textContent;
 
