@@ -2,7 +2,7 @@
   "name": "widget-inline-extractor",
   "author": "养恐龙",
   "url": "https://github.com/hqweay/widget-inline-extractor",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "minAppVersion": "2.8.8",
   "displayName": {
     "default": "行内元素抓取",
