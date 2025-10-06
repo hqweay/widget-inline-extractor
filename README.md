@@ -1,3 +1,7 @@
+如有需求可使用新挂件：[https://github.com/TCOTC/inline-elements](https://github.com/TCOTC/inline-elements) 解决了该挂件的 issue。
+
+---
+
 获取文档内的行内元素并以列表形式作为挂件展示。
 
 支持控制是否获取嵌入块的元素。
@@ -7,4 +11,5 @@
 支持获取行内元素类型：
 - 标注（highlight）
 - 重点（strong）
+
 - ……
